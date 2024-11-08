@@ -6,12 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
-public class Product {
+public class EcomProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,13 +24,14 @@ public class Product {
     private String description;
 
     @NotNull
-    private double price;
+    private Long price;
 
-    @ElementCollection
-    private List<String> photoUrl;
+    @NotNull
+    @NotEmpty
+    private String stripePhotoUrl;
 
     //Class Constructor
-    public Product (){
+    public EcomProduct(){
 
     }
 }

@@ -1,7 +1,9 @@
 package com.spring.ecommerce.setup.controllers;
 
 import com.stripe.exception.StripeException;
+import com.stripe.model.Price;
 import com.stripe.model.checkout.Session;
+import com.stripe.param.PriceCreateParams;
 import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,17 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/payment")
 public class PaymentController {
 
-    @PostMapping("/create-checkout-session")
+
+    @PostMapping("/checkout")
     public Session createCheckoutSession() throws StripeException {
         SessionCreateParams params =
                 SessionCreateParams.builder()
                         .setSuccessUrl("https://example.com/success")
                         .addLineItem(
                                 SessionCreateParams.LineItem.builder()
-                                        .setPrice("price_1MotwRLkdIwHu7ixYcPLm5uZ")
+                                        .setPrice("price_id")
                                         .setQuantity(2L)
                                         .build()
                         )
