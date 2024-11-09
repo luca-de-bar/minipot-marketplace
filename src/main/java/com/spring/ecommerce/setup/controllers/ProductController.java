@@ -1,7 +1,7 @@
 package com.spring.ecommerce.setup.controllers;
+import com.spring.ecommerce.setup.DTO.EcomProductDTO;
 import com.spring.ecommerce.setup.models.EcomProduct;
 import com.spring.ecommerce.setup.services.ProductService;
-import com.spring.ecommerce.setup.services.StripeService;
 import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,14 +29,15 @@ public class ProductController {
     //EDIT
     @PutMapping("/edit/{id}")
     public ResponseEntity <EcomProduct> update (@PathVariable("id") Long id,
-                                                @RequestBody EcomProduct product) throws StripeException {
+                                                @RequestBody EcomProductDTO product) throws StripeException {
+        //Find product
         Optional<EcomProduct> existingProduct = productService.findById(id);
         if(existingProduct.isPresent()){
-            product.setId(id); //Maintains the same id
-            product.setStripeId(product.getStripeId()); //Maintains same stripe id
-            EcomProduct updatedProduct = productService.saveProduct(product);
+            //Save changes
+            EcomProduct updatedProduct = productService.updateProduct(id,product);
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
         }
+        //IF product not found
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
