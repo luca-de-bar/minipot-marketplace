@@ -47,4 +47,12 @@ public class StripeService {
                         .build();
         stripeProduct.update(params);
     }
+
+
+    //ARCHIVE
+    public void archiveStripeProduct(Long id) throws StripeException {
+        Product stripeProduct = Product.retrieve(id.toString());
+        ProductUpdateParams params = ProductUpdateParams.builder().setActive(false).build();
+        stripeProduct.update(params);
+    }
 }

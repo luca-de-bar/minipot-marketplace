@@ -23,6 +23,11 @@ public class ProductService {
         return repository.save(ecomProduct);
     }
 
+    //DELETE
+    public void deleteProduct(Long id){
+        repository.deleteById(id);
+    }
+
     //FIND by ID
     public Optional<EcomProduct> findById(Long id){
         return repository.findById(id);

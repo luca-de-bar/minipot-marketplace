@@ -17,6 +17,7 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
     @Autowired
     private StripeService stripeService;
 
@@ -30,19 +31,31 @@ public class ProductController {
 
     //EDIT
     @PutMapping("/edit/{id}")
-    public ResponseEntity <EcomProduct> update (@PathVariable("id") Long id,
-                                                @RequestBody EcomProduct product) throws StripeException {
+    public ResponseEntity <EcomProduct> update (@PathVariable("id") Long id, @RequestBody EcomProduct product) throws StripeException {
         //Find product
         Optional<EcomProduct> existingProduct = productService.findById(id);
         if(existingProduct.isPresent()){
             product.setId(id); //Maintains the same id
-
             //Save changes
             EcomProduct updatedProduct = productService.updateProduct(product);
             stripeService.updateStripeProduct(product);
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
         }
-        //IF product not found
+        //If product not found
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+
+    //DELETE
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<EcomProduct> delete (@PathVariable("id") Long id) throws StripeException {
+        Optional<EcomProduct> product = productService.findById(id);
+
+        if(product.isPresent()){
+            productService.deleteProduct(id);
+            stripeService.archiveStripeProduct(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
