@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Setter
@@ -37,7 +38,9 @@ public class EcomProduct {
 
     @NotNull
     @NotEmpty
-    private String photoUrl;
+    @ElementCollection
+    @Column(name = "image_url")
+    private List<String> imagesUrl;
 
     public EcomProduct (){
 

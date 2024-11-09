@@ -24,7 +24,7 @@ public class StripeService {
                 ProductCreateParams.builder()
                         .setName(ecomProduct.getName())
                         .setDescription(ecomProduct.getDescription())
-                        .addImage(ecomProduct.getPhotoUrl())
+                        .addAllImage(ecomProduct.getImagesUrl())
                         .setId(ecomProduct.getId().toString())
                         .setDefaultPriceData(
                                 ProductCreateParams.DefaultPriceData.builder()
@@ -44,6 +44,7 @@ public class StripeService {
                 ProductUpdateParams.builder()
                         .setName(ecomProduct.getName())
                         .setDescription(ecomProduct.getDescription())
+                        .addAllImage(ecomProduct.getImagesUrl())
                         .build();
         stripeProduct.update(params);
     }
