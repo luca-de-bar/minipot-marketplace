@@ -4,15 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Entity
-@Getter
 @Setter
-@NoArgsConstructor
+@Getter
 @Table(name = "products")
 public class EcomProduct {
 
@@ -29,6 +27,9 @@ public class EcomProduct {
     private String description;
 
     @NotNull
+    private Boolean active = true;
+
+    @NotNull
     private int quantity;
 
     @NotNull
@@ -37,4 +38,8 @@ public class EcomProduct {
     @NotNull
     @NotEmpty
     private String photoUrl;
+
+    public EcomProduct (){
+
+    }
 }

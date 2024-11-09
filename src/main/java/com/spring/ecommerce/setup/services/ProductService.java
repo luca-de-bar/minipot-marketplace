@@ -23,14 +23,16 @@ public class ProductService {
         return repository.save(ecomProduct);
     }
 
-    //DELETE
-    public void deleteProduct(Long id){
-        repository.deleteById(id);
+    //ARCHIVE
+    public void archiveProduct(Long id){
+        EcomProduct product = findById(id).get();
+        product.setActive(false);
+
+        repository.save(product);
     }
 
     //FIND by ID
     public Optional<EcomProduct> findById(Long id){
         return repository.findById(id);
     }
-
 }
