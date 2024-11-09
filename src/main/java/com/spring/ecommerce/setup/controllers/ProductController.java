@@ -1,5 +1,4 @@
 package com.spring.ecommerce.setup.controllers;
-import com.spring.ecommerce.setup.DTO.EcomProductDTO;
 import com.spring.ecommerce.setup.models.EcomProduct;
 import com.spring.ecommerce.setup.services.ProductService;
 import com.spring.ecommerce.setup.services.StripeService;
@@ -29,16 +28,18 @@ public class ProductController {
         return new ResponseEntity<>(newEcomProduct, HttpStatus.CREATED);
     }
 
-
     //EDIT
     @PutMapping("/edit/{id}")
     public ResponseEntity <EcomProduct> update (@PathVariable("id") Long id,
-                                                @RequestBody EcomProductDTO product) throws StripeException {
+                                                @RequestBody EcomProduct product) throws StripeException {
         //Find product
         Optional<EcomProduct> existingProduct = productService.findById(id);
         if(existingProduct.isPresent()){
+            product.setId(id); //Maintains the same id
+
             //Save changes
-            EcomProduct updatedProduct = productService.updateProduct(id,product);
+            EcomProduct updatedProduct = productService.updateProduct(product);
+            stripeService.updateStripeProduct(product);
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
         }
         //IF product not found

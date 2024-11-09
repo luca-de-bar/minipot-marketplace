@@ -1,6 +1,5 @@
 package com.spring.ecommerce.setup.services;
 
-import com.spring.ecommerce.setup.DTO.EcomProductDTO;
 import com.spring.ecommerce.setup.models.EcomProduct;
 import com.spring.ecommerce.setup.repositories.EcomProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +19,8 @@ public class ProductService {
     }
 
     //UPDATE
-    public EcomProduct updateProduct(Long id, EcomProductDTO productDTO){
-        EcomProduct product = repository.findById(id).get();
-
-        //Update on DB
-        product.setName(productDTO.getName());
-        product.setPrice(productDTO.getPrice());
-        product.setDescription(productDTO.getDescription());
-        product.setPhotoUrl(productDTO.getPhotoUrl());
-        product.setQuantity(productDTO.getQuantity());
-
-        return repository.save(product);
+    public EcomProduct updateProduct(EcomProduct ecomProduct){
+        return repository.save(ecomProduct);
     }
 
     //FIND by ID

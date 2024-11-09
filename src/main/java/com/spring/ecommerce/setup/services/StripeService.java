@@ -1,9 +1,11 @@
 package com.spring.ecommerce.setup.services;
 
+import com.spring.ecommerce.setup.DTO.EcomProductDTO;
 import com.spring.ecommerce.setup.models.EcomProduct;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Product;
 import com.stripe.param.ProductCreateParams;
+import com.stripe.param.ProductUpdateParams;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -11,10 +13,10 @@ import java.math.BigDecimal;
 @Service
 public class StripeService {
 
-    //CREATE Stripe Product and return its ID
+    //CREATE Stripe Product
     public void createStripeProduct(EcomProduct ecomProduct) throws StripeException {
 
-        //Convert BigDecimal to Long for Stripe API
+        //Convert price from BigDecimal to Long for Stripe API
         Long priceInCents = ecomProduct.getPrice()
                 .multiply(new BigDecimal("100"))
                 .longValue();
@@ -27,7 +29,7 @@ public class StripeService {
                         .setId(ecomProduct.getId().toString())
                         .setDefaultPriceData(
                                 ProductCreateParams.DefaultPriceData.builder()
-                                        .setUnitAmount(priceInCents)
+                                        .setUnitAmount(priceInCents) //I used here converted price
                                         .setCurrency("eur")
                                         .build()
                         )
@@ -36,4 +38,14 @@ public class StripeService {
     }
 
     //EDIT
+    public void updateStripeProduct(EcomProduct ecomProduct) throws StripeException {
+        Product stripeProduct = Product.retrieve(ecomProduct.getId().toString());
+
+        ProductUpdateParams params =
+                ProductUpdateParams.builder()
+                        .setName(ecomProduct.getName())
+                        .setDescription(ecomProduct.getDescription())
+                        .build();
+        stripeProduct.update(params);
+    }
 }

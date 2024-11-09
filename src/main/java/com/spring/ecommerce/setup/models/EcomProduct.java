@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -11,14 +12,13 @@ import java.math.BigDecimal;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "products")
 public class EcomProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String stripeId;
 
     @NotNull
     @NotEmpty
@@ -37,9 +37,4 @@ public class EcomProduct {
     @NotNull
     @NotEmpty
     private String photoUrl;
-
-    //Class Constructor
-    public EcomProduct(){
-
-    }
 }
