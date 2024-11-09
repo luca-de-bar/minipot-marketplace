@@ -47,7 +47,7 @@ public class ProductController {
 
 
     //ARCHIVE
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/archive/{id}")
     public ResponseEntity<EcomProduct> delete (@PathVariable("id") Long id) throws StripeException {
         Optional<EcomProduct> product = productService.findById(id);
 
