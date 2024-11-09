@@ -1,6 +1,5 @@
 package com.spring.ecommerce.setup.services;
 
-import com.spring.ecommerce.setup.DTO.EcomProductDTO;
 import com.spring.ecommerce.setup.models.EcomProduct;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Product;
