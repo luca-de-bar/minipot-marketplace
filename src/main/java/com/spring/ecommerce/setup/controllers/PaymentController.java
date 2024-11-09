@@ -17,7 +17,7 @@ public class PaymentController {
 
 
     @PostMapping("/checkout")
-    public Session createCheckoutSession() throws StripeException {
+    public String createCheckoutSession() throws StripeException {
         SessionCreateParams params =
                 SessionCreateParams.builder()
                         .setSuccessUrl("https://example.com/success")
@@ -29,6 +29,8 @@ public class PaymentController {
                         )
                         .setMode(SessionCreateParams.Mode.PAYMENT)
                         .build();
-        return Session.create(params);
+        Session session = Session.create(params);
+
+        return session.getUrl();
     }
 }

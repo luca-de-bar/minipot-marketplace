@@ -6,14 +6,21 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
+@Table(name = "products")
 public class EcomProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotEmpty
+    @NotNull
+    private String stripeId;
 
     @NotNull
     @NotEmpty
@@ -24,11 +31,14 @@ public class EcomProduct {
     private String description;
 
     @NotNull
-    private Long price;
+    private int quantity;
+
+    @NotNull
+    private BigDecimal price;
 
     @NotNull
     @NotEmpty
-    private String stripePhotoUrl;
+    private String photoUrl;
 
     //Class Constructor
     public EcomProduct(){
