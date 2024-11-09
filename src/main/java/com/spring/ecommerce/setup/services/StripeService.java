@@ -2,7 +2,9 @@ package com.spring.ecommerce.setup.services;
 
 import com.spring.ecommerce.setup.models.EcomProduct;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Price;
 import com.stripe.model.Product;
+import com.stripe.param.PriceCreateParams;
 import com.stripe.param.ProductCreateParams;
 import com.stripe.param.ProductUpdateParams;
 import org.springframework.stereotype.Service;
@@ -36,10 +38,13 @@ public class StripeService {
         Product.create(params);
     }
 
+
+
     //EDIT
     public void updateStripeProduct(EcomProduct ecomProduct) throws StripeException {
         Product stripeProduct = Product.retrieve(ecomProduct.getId().toString());
 
+        //Update name, description, images
         ProductUpdateParams params =
                 ProductUpdateParams.builder()
                         .setName(ecomProduct.getName())
@@ -47,6 +52,20 @@ public class StripeService {
                         .addAllImage(ecomProduct.getImagesUrl())
                         .build();
         stripeProduct.update(params);
+
+        //Convert price from BigDecimal to Long for Stripe API
+        Long priceInCents = ecomProduct.getPrice()
+                .multiply(new BigDecimal("100"))
+                .longValue();
+
+        PriceCreateParams priceParams = PriceCreateParams.builder()
+                .setUnitAmount(priceInCents)
+                .setActive(true)
+                .setCurrency("eur")
+                .setProduct(ecomProduct.getId().toString())
+                .build();
+
+        Price.create(priceParams);
     }
 
 
