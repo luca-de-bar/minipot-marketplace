@@ -3,7 +3,6 @@ package com.spring.ecommerce.setup.services;
 import com.spring.ecommerce.setup.DTO.EcomProductDTO;
 import com.spring.ecommerce.setup.models.EcomProduct;
 import com.spring.ecommerce.setup.repositories.EcomProductRepository;
-import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +14,8 @@ public class ProductService {
     @Autowired
     private EcomProductRepository repository;
 
-    @Autowired
-    private StripeService stripeService;
-
     //STORE : call this method only for NEW products
-    public EcomProduct storeProduct(EcomProduct ecomProduct) throws StripeException {
-        String stripeProductId = stripeService.createStripeProduct(ecomProduct);
-        ecomProduct.setStripeId(stripeProductId);
+    public EcomProduct storeProduct(EcomProduct ecomProduct){
         return repository.save(ecomProduct);
     }
 

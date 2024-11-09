@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class StripeService {
 
     //CREATE Stripe Product and return its ID
-    public String createStripeProduct(EcomProduct ecomProduct) throws StripeException {
+    public void createStripeProduct(EcomProduct ecomProduct) throws StripeException {
 
         //Convert BigDecimal to Long for Stripe API
         Long priceInCents = ecomProduct.getPrice()
@@ -24,6 +24,7 @@ public class StripeService {
                         .setName(ecomProduct.getName())
                         .setDescription(ecomProduct.getDescription())
                         .addImage(ecomProduct.getPhotoUrl())
+                        .setId(ecomProduct.getId().toString())
                         .setDefaultPriceData(
                                 ProductCreateParams.DefaultPriceData.builder()
                                         .setUnitAmount(priceInCents)
@@ -31,8 +32,7 @@ public class StripeService {
                                         .build()
                         )
                         .build();
-        Product product = Product.create(params);
-        return product.getId(); //Return stripe product id
+        Product.create(params);
     }
 
     //EDIT

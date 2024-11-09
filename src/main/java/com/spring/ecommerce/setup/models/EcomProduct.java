@@ -18,8 +18,6 @@ public class EcomProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
-    @NotNull
     private String stripeId;
 
     @NotNull

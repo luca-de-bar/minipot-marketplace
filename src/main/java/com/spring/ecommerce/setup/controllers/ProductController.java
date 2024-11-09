@@ -2,6 +2,7 @@ package com.spring.ecommerce.setup.controllers;
 import com.spring.ecommerce.setup.DTO.EcomProductDTO;
 import com.spring.ecommerce.setup.models.EcomProduct;
 import com.spring.ecommerce.setup.services.ProductService;
+import com.spring.ecommerce.setup.services.StripeService;
 import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +18,14 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private StripeService stripeService;
 
     //CREATE
     @PostMapping("/create")
     public ResponseEntity<EcomProduct>  createProduct(@RequestBody EcomProduct ecomProduct) throws StripeException {
         EcomProduct newEcomProduct = productService.storeProduct(ecomProduct);
+        stripeService.createStripeProduct(ecomProduct);
         return new ResponseEntity<>(newEcomProduct, HttpStatus.CREATED);
     }
 
