@@ -48,6 +48,11 @@ public class StripeItemService {
     public void updateStripeProduct(Item product) throws StripeException {
         Product stripeProduct = Product.retrieve(product.getStripeId());
 
+        //If product archived, throw Exception
+        if(!product.getActive()){
+            throw new UnsupportedOperationException("Cannot edit an archived product");
+        }
+
         for (Price price : priceService.getAllPrices(product).getData()) {
             //Both converted in Long for easy compare
             Long oldPrice = price.getUnitAmountDecimal().longValue();
