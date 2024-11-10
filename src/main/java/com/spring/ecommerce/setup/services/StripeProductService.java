@@ -59,17 +59,21 @@ public class StripeProductService {
             //If old price (on Stripe) is different from new price (provided via api call)
             if(!oldPrice.equals(newPrice)){
                 //Create a new price id
-                String newPriceId = priceService.updateStripePrice(ecomProduct);
-                PriceUpdateParams updateParams = PriceUpdateParams.builder()
-                        .setActive(false)
-                        .build();
-                price.update(updateParams);
+                String newPriceId = priceService.createStripePrice(ecomProduct);
 
+                //Set it as default
                 ProductUpdateParams params =
                         ProductUpdateParams.builder()
                                 .setDefaultPrice(newPriceId)
                                 .build();
                 stripeProduct.update(params);
+
+                //Disable old one
+                PriceUpdateParams updateParams = PriceUpdateParams.builder()
+                        .setActive(false)
+                        .build();
+                price.update(updateParams);
+                break;
             }
         }
 

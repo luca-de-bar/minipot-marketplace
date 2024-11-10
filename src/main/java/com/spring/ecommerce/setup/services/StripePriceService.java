@@ -37,7 +37,7 @@ public class StripePriceService {
 
 
     //UPDATE PRICE RELATED TO PRODUCT
-    public String updateStripePrice (EcomProduct ecomProduct) throws StripeException{
+    public String createStripePrice (EcomProduct ecomProduct) throws StripeException{
 
         // Convert price from BigDecimal to Long for Stripe API
         Long priceInCents = ecomProduct.getPrice()
