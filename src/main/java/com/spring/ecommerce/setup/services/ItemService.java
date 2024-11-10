@@ -41,6 +41,14 @@ public class ItemService {
         repository.save(product);
     }
 
+    //UN-ARCHIVE?
+    public void unarchiveProduct(Long id){
+        Item product = findById(id).get();
+        product.setActive(true);
+
+        repository.save(product);
+    }
+
     //FIND by ID
     public Optional<Item> findById(Long id){
         return repository.findById(id);

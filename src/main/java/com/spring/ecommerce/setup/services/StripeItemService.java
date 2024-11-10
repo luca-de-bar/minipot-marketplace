@@ -84,12 +84,20 @@ public class StripeItemService {
     }
 
 
-
     //ARCHIVE
     public void archiveStripeProduct(Item product) throws StripeException {
         Product stripeProduct = Product.retrieve(product.getStripeId());
 
         ProductUpdateParams params = ProductUpdateParams.builder().setActive(false).build();
+        stripeProduct.update(params);
+    }
+
+
+    //UN-ARCHIVE?
+    public void unarchiveStripeProduct(Item product) throws StripeException {
+        Product stripeProduct = Product.retrieve(product.getStripeId());
+
+        ProductUpdateParams params = ProductUpdateParams.builder().setActive(true).build();
         stripeProduct.update(params);
     }
 }

@@ -59,4 +59,18 @@ public class ItemController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    //UN-ARCHIVE?
+    @PostMapping("/restore/{id}")
+    public ResponseEntity<Item> restore (@PathVariable("id") Long id) throws StripeException {
+        Optional<Item> product = itemService.findById(id);
+
+        if(product.isPresent()){
+            itemService.unarchiveProduct(id);
+            stripeItemService.unarchiveStripeProduct(product.get());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
 }
