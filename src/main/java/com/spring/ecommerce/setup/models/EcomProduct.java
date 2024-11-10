@@ -39,8 +39,12 @@ public class EcomProduct {
     @NotNull
     @NotEmpty
     @ElementCollection
+    @CollectionTable(name = "product_image", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "image_url")
     private List<String> imagesUrl;
+
+    @ManyToMany(mappedBy = "products")
+    private List<Cart> carts;
 
     public EcomProduct (){
 

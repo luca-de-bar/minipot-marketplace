@@ -21,6 +21,19 @@ public class StripePriceService {
         return Price.list(params);
     }
 
+    //GET DEFAULT PRICE FOR SELECTED PRODUCT
+    public String getDefaultPrice(EcomProduct ecomProduct) throws StripeException {
+        PriceListParams params = PriceListParams.builder()
+                .setProduct(ecomProduct.getId().toString())
+                .setActive(true)
+                .setLimit(1L)
+                .build();
+        PriceCollection prices = Price.list(params);
+
+        //Return the default price
+        return prices.getData().getFirst().toString();
+    }
+
 
 
     //UPDATE PRICE RELATED TO PRODUCT
