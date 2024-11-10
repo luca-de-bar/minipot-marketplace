@@ -52,6 +52,7 @@ public class StripeItemService {
             //Both converted in Long for easy compare
             Long oldPrice = price.getUnitAmountDecimal().longValue();
             Long newPrice = product.getPrice().multiply(new BigDecimal("100")).longValue();
+
             //If prices are different, create new one and disable old
             if(!oldPrice.equals(newPrice)){
                 String newPriceId = priceService.createStripePrice(product);
@@ -64,8 +65,8 @@ public class StripeItemService {
                         .setActive(false)
                         .build();
                 price.update(updateParams);
-                break;
             }
+            break;
         }
         //Update Product params
         ProductUpdateParams params =

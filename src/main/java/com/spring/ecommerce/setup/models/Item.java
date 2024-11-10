@@ -22,6 +22,7 @@ public class Item {
 
     @NotNull
     @NotEmpty
+    @JsonIgnore
     private String stripeId;
 
     @NotNull
