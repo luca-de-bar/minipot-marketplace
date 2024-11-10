@@ -16,7 +16,7 @@ public class StripePriceService {
     //GET PRICES FOR SELECTED PRODUCT
     public PriceCollection getAllPrices(EcomProduct ecomProduct) throws StripeException {
         PriceListParams params = PriceListParams.builder()
-                .setProduct(ecomProduct.getId().toString())
+                .setProduct(ecomProduct.getStripeId())
                 .build();
         return Price.list(params);
     }
@@ -24,14 +24,14 @@ public class StripePriceService {
     //GET DEFAULT PRICE FOR SELECTED PRODUCT
     public String getDefaultPrice(EcomProduct ecomProduct) throws StripeException {
         PriceListParams params = PriceListParams.builder()
-                .setProduct(ecomProduct.getId().toString())
+                .setProduct(ecomProduct.getStripeId())
                 .setActive(true)
                 .setLimit(1L)
                 .build();
         PriceCollection prices = Price.list(params);
 
         //Return the default price
-        return prices.getData().getFirst().toString();
+        return prices.getData().getFirst().getId();
     }
 
 
@@ -49,7 +49,7 @@ public class StripePriceService {
                 .setUnitAmount(priceInCents)
                 .setActive(true)
                 .setCurrency("eur")
-                .setProduct(ecomProduct.getId().toString())
+                .setProduct(ecomProduct.getStripeId())
                 .build();
 
 

@@ -13,12 +13,16 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
-@Table(name = "products")
+@Table(name = "product")
 public class EcomProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
+    @NotEmpty
+    private String stripeId;
 
     @NotNull
     @NotEmpty

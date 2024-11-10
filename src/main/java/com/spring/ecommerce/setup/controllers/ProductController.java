@@ -1,8 +1,10 @@
 package com.spring.ecommerce.setup.controllers;
+import com.spring.ecommerce.setup.DTO.EcomProductDTO;
 import com.spring.ecommerce.setup.models.EcomProduct;
 import com.spring.ecommerce.setup.services.ProductService;
 import com.spring.ecommerce.setup.services.StripeProductService;
 import com.stripe.exception.StripeException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,21 +26,20 @@ public class ProductController {
     //CREATE
     @PostMapping("/create")
     public ResponseEntity<EcomProduct>  createProduct(@RequestBody EcomProduct ecomProduct) throws StripeException {
-        EcomProduct newEcomProduct = productService.storeProduct(ecomProduct);
         stripeProductService.createStripeProduct(ecomProduct);
+        EcomProduct newEcomProduct = productService.storeProduct(ecomProduct);
         return new ResponseEntity<>(newEcomProduct, HttpStatus.CREATED);
     }
 
     //EDIT
     @PutMapping("/edit/{id}")
-    public ResponseEntity <EcomProduct> update (@PathVariable("id") Long id, @RequestBody EcomProduct product) throws StripeException {
+    public ResponseEntity <EcomProduct> update (@PathVariable("id") Long id, @RequestBody EcomProductDTO product) throws StripeException {
         //Find product
         Optional<EcomProduct> existingProduct = productService.findById(id);
+
         if(existingProduct.isPresent()){
-            product.setId(id); //Maintains the same id
-            //Save changes
-            EcomProduct updatedProduct = productService.updateProduct(product);
-            stripeProductService.updateStripeProduct(product);
+            EcomProduct updatedProduct = productService.updateProduct(id,product);
+            stripeProductService.updateStripeProduct(existingProduct.get());
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
         }
         //If product not found
@@ -53,7 +54,7 @@ public class ProductController {
 
         if(product.isPresent()){
             productService.archiveProduct(id);
-            stripeProductService.archiveStripeProduct(id);
+            stripeProductService.archiveStripeProduct(product.get());
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

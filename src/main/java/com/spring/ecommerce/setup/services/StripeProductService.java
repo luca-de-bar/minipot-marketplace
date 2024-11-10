@@ -32,7 +32,6 @@ public class StripeProductService {
                         .setName(ecomProduct.getName())
                         .setDescription(ecomProduct.getDescription())
                         .addAllImage(ecomProduct.getImagesUrl())
-                        .setId(ecomProduct.getId().toString())
                         .setDefaultPriceData(
                                 ProductCreateParams.DefaultPriceData.builder()
                                         .setUnitAmount(priceInCents) //I used here converted price
@@ -40,35 +39,30 @@ public class StripeProductService {
                                         .build()
                         )
                         .build();
-        Product.create(params);
-    }
 
+        Product product = Product.create(params);
+        ecomProduct.setStripeId(product.getId());
+    }
 
     //EDIT
     public void updateStripeProduct(EcomProduct ecomProduct) throws StripeException {
+        Product stripeProductID = Product.retrieve(ecomProduct.getStripeId());
 
-        Product stripeProduct = Product.retrieve(ecomProduct.getId().toString());
-
-        //Archive old prices
         for (Price price : priceService.getAllPrices(ecomProduct).getData()) {
 
             //Both converted in Long for easy compare
             Long oldPrice = price.getUnitAmountDecimal().longValue();
             Long newPrice = ecomProduct.getPrice().multiply(new BigDecimal("100")).longValue();
 
-            //If old price (on Stripe) is different from new price (provided via api call)
+            //If prices are different, create new one and disable old
             if(!oldPrice.equals(newPrice)){
-                //Create a new price id
                 String newPriceId = priceService.createStripePrice(ecomProduct);
-
-                //Set it as default
                 ProductUpdateParams params =
                         ProductUpdateParams.builder()
                                 .setDefaultPrice(newPriceId)
                                 .build();
-                stripeProduct.update(params);
+                stripeProductID.update(params);
 
-                //Disable old one
                 PriceUpdateParams updateParams = PriceUpdateParams.builder()
                         .setActive(false)
                         .build();
@@ -76,20 +70,20 @@ public class StripeProductService {
                 break;
             }
         }
-
-        //Update name, description and image NOT price
+        //Update Product params
         ProductUpdateParams params =
                 ProductUpdateParams.builder()
                         .setName(ecomProduct.getName())
                         .setDescription(ecomProduct.getDescription())
                         .addAllImage(ecomProduct.getImagesUrl())
                         .build();
-        stripeProduct.update(params);
+
+        stripeProductID.update(params);
     }
 
     //ARCHIVE
-    public void archiveStripeProduct(Long id) throws StripeException {
-        Product stripeProduct = Product.retrieve(id.toString());
+    public void archiveStripeProduct(EcomProduct ecomProduct) throws StripeException {
+        Product stripeProduct = Product.retrieve(ecomProduct.getStripeId());
         ProductUpdateParams params = ProductUpdateParams.builder().setActive(false).build();
         stripeProduct.update(params);
     }

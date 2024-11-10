@@ -1,15 +1,15 @@
 package com.spring.ecommerce.setup.controllers;
 
 import com.spring.ecommerce.setup.models.EcomProduct;
+import com.spring.ecommerce.setup.services.ProductService;
 import com.spring.ecommerce.setup.services.StripePriceService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -19,10 +19,15 @@ public class PaymentController {
     @Autowired
     private StripePriceService priceService;
 
-    @PostMapping("/checkout")
-    public String createCheckoutSession(EcomProduct ecomProduct) throws StripeException {
+    @Autowired
+    private ProductService productService;
 
-        String priceId =  priceService.getDefaultPrice(ecomProduct);
+    @PostMapping("/{id}")
+    public String createCheckoutSession(@PathVariable("id") Long id) throws StripeException {
+
+        //Find product to pay for
+        Optional<EcomProduct> product = productService.findById(id);
+        String priceId =  priceService.getDefaultPrice(product.get());
 
         SessionCreateParams params =
                 SessionCreateParams.builder()
