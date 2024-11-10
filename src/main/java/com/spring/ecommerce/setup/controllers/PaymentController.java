@@ -1,7 +1,7 @@
 package com.spring.ecommerce.setup.controllers;
 
-import com.spring.ecommerce.setup.models.EcomProduct;
-import com.spring.ecommerce.setup.services.ProductService;
+import com.spring.ecommerce.setup.models.Item;
+import com.spring.ecommerce.setup.services.ItemService;
 import com.spring.ecommerce.setup.services.StripePriceService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
@@ -20,13 +20,13 @@ public class PaymentController {
     private StripePriceService priceService;
 
     @Autowired
-    private ProductService productService;
+    private ItemService itemService;
 
     @PostMapping("/{id}")
     public String createCheckoutSession(@PathVariable("id") Long id) throws StripeException {
 
         //Find product to pay for
-        Optional<EcomProduct> product = productService.findById(id);
+        Optional<Item> product = itemService.findById(id);
         String priceId =  priceService.getDefaultPrice(product.get());
 
         SessionCreateParams params =

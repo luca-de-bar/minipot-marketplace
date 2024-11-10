@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @Getter
 @Table(name = "product")
-public class EcomProduct {
+public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +53,7 @@ public class EcomProduct {
     @JsonIgnore
     private List<Cart> carts;
 
-    public EcomProduct (){
+    public Item(){
 
     }
 }

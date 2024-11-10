@@ -21,7 +21,7 @@ public class Cart {
             joinColumns = @JoinColumn(name = "cart_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private List<EcomProduct> products;
+    private List<Item> products;
 
     //Class Constructor
     public Cart (){
@@ -29,18 +29,18 @@ public class Cart {
     }
 
     //Add To Cart
-    public void addToCart(EcomProduct product){
+    public void addToCart(Item product){
         products.add(product);
     }
 
     //Remove from cart
-    public void remove (EcomProduct product){
+    public void remove (Item product){
         products.remove(product);
     }
 
     //Remove all
     public void removeAll(){
-        for (EcomProduct product : products){
+        for (Item product : products){
             products.remove(product);
         }
     }

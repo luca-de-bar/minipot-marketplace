@@ -1,6 +1,6 @@
 package com.spring.ecommerce.setup.services;
 
-import com.spring.ecommerce.setup.models.EcomProduct;
+import com.spring.ecommerce.setup.models.Item;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Price;
 import com.stripe.model.PriceCollection;
@@ -14,17 +14,19 @@ import java.math.BigDecimal;
 public class StripePriceService {
 
     //GET PRICES FOR SELECTED PRODUCT
-    public PriceCollection getAllPrices(EcomProduct ecomProduct) throws StripeException {
+    public PriceCollection getAllPrices(Item product) throws StripeException {
         PriceListParams params = PriceListParams.builder()
-                .setProduct(ecomProduct.getStripeId())
+                .setProduct(product.getStripeId())
                 .build();
         return Price.list(params);
     }
 
+
+
     //GET DEFAULT PRICE FOR SELECTED PRODUCT
-    public String getDefaultPrice(EcomProduct ecomProduct) throws StripeException {
+    public String getDefaultPrice(Item product) throws StripeException {
         PriceListParams params = PriceListParams.builder()
-                .setProduct(ecomProduct.getStripeId())
+                .setProduct(product.getStripeId())
                 .setActive(true)
                 .setLimit(1L)
                 .build();
@@ -36,11 +38,11 @@ public class StripePriceService {
 
 
 
-    //UPDATE PRICE RELATED TO PRODUCT
-    public String createStripePrice (EcomProduct ecomProduct) throws StripeException{
+    //CREATE NEW PRICE FOR A PRODUCT
+    public String createStripePrice (Item product) throws StripeException{
 
         // Convert price from BigDecimal to Long for Stripe API
-        Long priceInCents = ecomProduct.getPrice()
+        Long priceInCents = product.getPrice()
                 .multiply(new BigDecimal("100"))
                 .longValue();
 
@@ -49,7 +51,7 @@ public class StripePriceService {
                 .setUnitAmount(priceInCents)
                 .setActive(true)
                 .setCurrency("eur")
-                .setProduct(ecomProduct.getStripeId())
+                .setProduct(product.getStripeId())
                 .build();
 
 

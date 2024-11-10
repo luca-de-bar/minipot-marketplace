@@ -1,28 +1,28 @@
 package com.spring.ecommerce.setup.services;
 
-import com.spring.ecommerce.setup.DTO.EcomProductDTO;
-import com.spring.ecommerce.setup.models.EcomProduct;
-import com.spring.ecommerce.setup.repositories.EcomProductRepository;
+import com.spring.ecommerce.setup.DTO.ItemDTO;
+import com.spring.ecommerce.setup.models.Item;
+import com.spring.ecommerce.setup.repositories.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class ProductService {
+public class ItemService {
 
     @Autowired
-    private EcomProductRepository repository;
+    private ItemRepository repository;
 
     //STORE : call this method only for NEW products
-    public EcomProduct storeProduct(EcomProduct ecomProduct){
-        return repository.save(ecomProduct);
+    public Item storeProduct(Item product){
+        return repository.save(product);
     }
 
     //UPDATE
-    public EcomProduct updateProduct(Long id,EcomProductDTO productDTO){
+    public Item updateProduct(Long id, ItemDTO productDTO){
 
-        EcomProduct product = repository.findById(id).get();
+        Item product = repository.findById(id).get();
 
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
@@ -35,14 +35,14 @@ public class ProductService {
 
     //ARCHIVE
     public void archiveProduct(Long id){
-        EcomProduct product = findById(id).get();
+        Item product = findById(id).get();
         product.setActive(false);
 
         repository.save(product);
     }
 
     //FIND by ID
-    public Optional<EcomProduct> findById(Long id){
+    public Optional<Item> findById(Long id){
         return repository.findById(id);
     }
 }

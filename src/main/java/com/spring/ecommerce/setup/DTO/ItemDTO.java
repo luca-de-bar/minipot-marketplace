@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EcomProductDTO {
+public class ItemDTO {
 
     @NotEmpty
     @NotNull
