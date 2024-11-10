@@ -1,7 +1,7 @@
 package com.spring.ecommerce.setup.controllers;
 import com.spring.ecommerce.setup.models.EcomProduct;
 import com.spring.ecommerce.setup.services.ProductService;
-import com.spring.ecommerce.setup.services.StripeService;
+import com.spring.ecommerce.setup.services.StripeProductService;
 import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,13 +19,13 @@ public class ProductController {
     private ProductService productService;
 
     @Autowired
-    private StripeService stripeService;
+    private StripeProductService stripeProductService;
 
     //CREATE
     @PostMapping("/create")
     public ResponseEntity<EcomProduct>  createProduct(@RequestBody EcomProduct ecomProduct) throws StripeException {
         EcomProduct newEcomProduct = productService.storeProduct(ecomProduct);
-        stripeService.createStripeProduct(ecomProduct);
+        stripeProductService.createStripeProduct(ecomProduct);
         return new ResponseEntity<>(newEcomProduct, HttpStatus.CREATED);
     }
 
@@ -38,7 +38,7 @@ public class ProductController {
             product.setId(id); //Maintains the same id
             //Save changes
             EcomProduct updatedProduct = productService.updateProduct(product);
-            stripeService.updateStripeProduct(product);
+            stripeProductService.updateStripeProduct(product);
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
         }
         //If product not found
@@ -53,7 +53,7 @@ public class ProductController {
 
         if(product.isPresent()){
             productService.archiveProduct(id);
-            stripeService.archiveStripeProduct(id);
+            stripeProductService.archiveStripeProduct(id);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

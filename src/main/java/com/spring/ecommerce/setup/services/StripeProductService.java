@@ -4,15 +4,20 @@ import com.spring.ecommerce.setup.models.EcomProduct;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Price;
 import com.stripe.model.Product;
-import com.stripe.param.PriceCreateParams;
+import com.stripe.param.PriceUpdateParams;
 import com.stripe.param.ProductCreateParams;
 import com.stripe.param.ProductUpdateParams;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
-public class StripeService {
+public class StripeProductService {
+
+    @Autowired
+    private StripePriceService priceService;
+
 
     //CREATE Stripe Product
     public void createStripeProduct(EcomProduct ecomProduct) throws StripeException {
@@ -39,35 +44,33 @@ public class StripeService {
     }
 
 
-
     //EDIT
     public void updateStripeProduct(EcomProduct ecomProduct) throws StripeException {
-        Product stripeProduct = Product.retrieve(ecomProduct.getId().toString());
 
-        //Update name, description, images
+        Product stripeProduct = Product.retrieve(ecomProduct.getId().toString());
+        String newPriceId = priceService.updateStripePrice(ecomProduct);
+
+        //Update name, description and image
         ProductUpdateParams params =
                 ProductUpdateParams.builder()
                         .setName(ecomProduct.getName())
                         .setDescription(ecomProduct.getDescription())
                         .addAllImage(ecomProduct.getImagesUrl())
+                        .setDefaultPrice(newPriceId)
                         .build();
         stripeProduct.update(params);
 
-        //Convert price from BigDecimal to Long for Stripe API
-        Long priceInCents = ecomProduct.getPrice()
-                .multiply(new BigDecimal("100"))
-                .longValue();
+        //Archive old prices
+        for (Price price : priceService.getAllPrices(ecomProduct).getData()) {
+            if(!price.getId().equals(newPriceId)){
+                PriceUpdateParams updateParams = PriceUpdateParams.builder()
+                        .setActive(false)
+                        .build();
 
-        PriceCreateParams priceParams = PriceCreateParams.builder()
-                .setUnitAmount(priceInCents)
-                .setActive(true)
-                .setCurrency("eur")
-                .setProduct(ecomProduct.getId().toString())
-                .build();
-
-        Price.create(priceParams);
+                price.update(updateParams);
+            }
+        }
     }
-
 
     //ARCHIVE
     public void archiveStripeProduct(Long id) throws StripeException {
