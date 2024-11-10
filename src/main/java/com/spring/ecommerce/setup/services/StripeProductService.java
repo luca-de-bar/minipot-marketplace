@@ -52,8 +52,9 @@ public class StripeProductService {
         //Archive old prices
         for (Price price : priceService.getAllPrices(ecomProduct).getData()) {
 
-            BigDecimal oldPrice = price.getUnitAmountDecimal();
-            BigDecimal newPrice = ecomProduct.getPrice();
+            //Both converted in Long for easy compare
+            Long oldPrice = price.getUnitAmountDecimal().longValue();
+            Long newPrice = ecomProduct.getPrice().multiply(new BigDecimal("100")).longValue();
 
             //If old price (on Stripe) is different from new price (provided via api call)
             if(!oldPrice.equals(newPrice)){
@@ -68,6 +69,7 @@ public class StripeProductService {
                         ProductUpdateParams.builder()
                                 .setDefaultPrice(newPriceId)
                                 .build();
+                stripeProduct.update(params);
             }
         }
 
