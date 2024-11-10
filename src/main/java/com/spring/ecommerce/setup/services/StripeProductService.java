@@ -48,28 +48,37 @@ public class StripeProductService {
     public void updateStripeProduct(EcomProduct ecomProduct) throws StripeException {
 
         Product stripeProduct = Product.retrieve(ecomProduct.getId().toString());
-        String newPriceId = priceService.updateStripePrice(ecomProduct);
 
-        //Update name, description and image
+        //Archive old prices
+        for (Price price : priceService.getAllPrices(ecomProduct).getData()) {
+
+            BigDecimal oldPrice = price.getUnitAmountDecimal();
+            BigDecimal newPrice = ecomProduct.getPrice();
+
+            //If old price (on Stripe) is different from new price (provided via api call)
+            if(!oldPrice.equals(newPrice)){
+                //Create a new price id
+                String newPriceId = priceService.updateStripePrice(ecomProduct);
+                PriceUpdateParams updateParams = PriceUpdateParams.builder()
+                        .setActive(false)
+                        .build();
+                price.update(updateParams);
+
+                ProductUpdateParams params =
+                        ProductUpdateParams.builder()
+                                .setDefaultPrice(newPriceId)
+                                .build();
+            }
+        }
+
+        //Update name, description and image NOT price
         ProductUpdateParams params =
                 ProductUpdateParams.builder()
                         .setName(ecomProduct.getName())
                         .setDescription(ecomProduct.getDescription())
                         .addAllImage(ecomProduct.getImagesUrl())
-                        .setDefaultPrice(newPriceId)
                         .build();
         stripeProduct.update(params);
-
-        //Archive old prices
-        for (Price price : priceService.getAllPrices(ecomProduct).getData()) {
-            if(!price.getId().equals(newPriceId)){
-                PriceUpdateParams updateParams = PriceUpdateParams.builder()
-                        .setActive(false)
-                        .build();
-
-                price.update(updateParams);
-            }
-        }
     }
 
     //ARCHIVE

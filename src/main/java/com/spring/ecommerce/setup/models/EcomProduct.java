@@ -1,5 +1,6 @@
 package com.spring.ecommerce.setup.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -28,6 +29,7 @@ public class EcomProduct {
     private String description;
 
     @NotNull
+    @JsonIgnore
     private Boolean active = true;
 
     @NotNull
@@ -44,6 +46,7 @@ public class EcomProduct {
     private List<String> imagesUrl;
 
     @ManyToMany(mappedBy = "products")
+    @JsonIgnore
     private List<Cart> carts;
 
     public EcomProduct (){
