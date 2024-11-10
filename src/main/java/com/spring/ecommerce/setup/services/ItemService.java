@@ -36,7 +36,7 @@ public class ItemService {
     //ARCHIVE
     public void archiveProduct(Long id){
         Item product = findById(id).get();
-        product.setActive(false);
+        product.setArchived(true);
 
         repository.save(product);
     }
@@ -44,7 +44,7 @@ public class ItemService {
     //UN-ARCHIVE?
     public void unarchiveProduct(Long id){
         Item product = findById(id).get();
-        product.setActive(true);
+        product.setArchived(false);
 
         repository.save(product);
     }

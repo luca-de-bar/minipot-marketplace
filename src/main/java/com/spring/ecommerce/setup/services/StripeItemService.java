@@ -49,7 +49,7 @@ public class StripeItemService {
         Product stripeProduct = Product.retrieve(product.getStripeId());
 
         //If product archived, throw Exception
-        if(!product.getActive()){
+        if(product.getArchived()){
             throw new UnsupportedOperationException("Cannot edit an archived product");
         }
 

@@ -35,7 +35,7 @@ public class Item {
 
     @NotNull
     @JsonIgnore
-    private Boolean active = true;
+    private Boolean archived = false;
 
     @NotNull
     private int quantity;
