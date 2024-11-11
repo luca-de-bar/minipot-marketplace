@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
 public class Cart {
 
     @Id
@@ -43,5 +41,21 @@ public class Cart {
         for (Item product : products){
             products.remove(product);
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Item> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Item> products) {
+        this.products = products;
     }
 }
