@@ -27,7 +27,6 @@ public class ItemDTO {
     private List<String> imagesUrl;
 
     //Constructor
-
     public ItemDTO() {
     }
 
