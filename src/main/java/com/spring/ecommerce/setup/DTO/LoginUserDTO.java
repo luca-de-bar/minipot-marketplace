@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 public class LoginUserDTO {
 
-    @NotBlank(message = "Il nome utente è obbligatorio")
-    private String username;
+    @NotBlank(message = "Inserisci un account valido")
+    private String email;
 
     @NotBlank(message = "La password è obbligatoria")
     private String password;

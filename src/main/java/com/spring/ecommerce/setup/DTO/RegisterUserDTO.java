@@ -1,11 +1,12 @@
 package com.spring.ecommerce.setup.DTO;
 
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Email;
 
 @Getter
 @Setter
@@ -17,6 +18,7 @@ public class RegisterUserDTO {
 
     @NotBlank(message = "L'email è obbligatoria")
     @Email(message = "Email non valida")
+    @Column(unique = true)
     private String email;
 
     @NotBlank(message = "La password è obbligatoria")

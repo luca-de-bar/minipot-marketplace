@@ -2,6 +2,7 @@ package com.spring.ecommerce.setup.services;
 
 import com.spring.ecommerce.setup.DTO.LoginUserDTO;
 import com.spring.ecommerce.setup.DTO.RegisterUserDTO;
+import com.spring.ecommerce.setup.exceptions.EmailAlreadyUsedException;
 import com.spring.ecommerce.setup.models.User;
 import com.spring.ecommerce.setup.repositories.UserRepository;
 import com.spring.ecommerce.setup.security.DatabaseUserDetails;
@@ -32,6 +33,12 @@ public class AuthenticationService {
     }
 
     public User register(RegisterUserDTO request) {
+
+        // Controlla se l'email è già in uso
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyUsedException("La mail è già in uso per un altro account");
+        }
+
         // Creiamo un nuovo utente e codifichiamo la password
         User user = new User();
         user.setUsername(request.getUsername());
@@ -45,13 +52,13 @@ public class AuthenticationService {
         // Autentichiamo l'utente
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
+                        request.getEmail(),
                         request.getPassword()
                 )
         );
 
         // Recuperiamo i dettagli dell'utente dal database
-        UserDetails userDetails = userRepository.findByUsername(request.getUsername())
+        UserDetails userDetails = userRepository.findByUsername(request.getEmail())
                 .map(DatabaseUserDetails::new)
                 .orElseThrow();
 
