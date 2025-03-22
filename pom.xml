@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.spring.ecommerce</groupId>
-    <artifactId>e-commerce-setup</artifactId>
+    <artifactId>minipot-marketplace-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>e-commerce-setup</name>
     <description>e-commerce-setup</description>
