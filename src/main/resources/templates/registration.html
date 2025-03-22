@@ -1,0 +1,36 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<h3>Benvenuto, [[${name}]]!</h3>
+<p>Ricevi questa email perché ti sei registrato alla piattaforma CrewDox. Per poter procedere al login, ti chiediamo di verificare il tuo account cliccando sul bottone sottostante: </p>
+<!-- Action -->
+<table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+        <td align="center">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td align="center">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td>
+                                    <a th:href="${verificationUrl}" class="button button--" target="_blank">Verifica il tuo account</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<!-- Sub copy -->
+<table class="body-sub">
+    <tr>
+        <td>
+            <br>
+            <p class="sub">Se stai avendo problemi con il bottone sopra, prova a copiare ed incollare il link sottostante in una nuova finestra del browser.</p>
+            <p class="sub" th:text="${verificationUrl}"></p>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
